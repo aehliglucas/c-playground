@@ -3,4 +3,8 @@ project(c_playground C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(c_playground pointers/main.c)
+add_executable(
+        #c_playground pointers/main.c
+        #pointers/main.c
+        c_playground cpu-usage/main.c
+)
