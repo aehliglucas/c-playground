@@ -4,26 +4,23 @@
 
 struct cpuUtilization
 {
-    long long user;
-    long long nice;
-    long long system;
-    long long idle;
-    long long iowait;
+    unsigned long long user, nice, system, idle, iowait, irq, softirq;
 };
 
 struct cpuUtilization getCurrentUtilization(FILE* file)
 {
     char* buffer[64];
     if (fgets(*buffer, 64, file) == NULL) {
-        printf("%s", "whatever");
+        fprintf(stderr, "Can't read CPU data from buffer");
+        exit(1);
     }
     strtok(*buffer, " ");
 
-    long long cpuData[10];
+    long long cpuData[64];
     int count = 0;
     char* dataToken;
 
-    while ((dataToken = strtok(NULL, " ")) != NULL && count < 10) {
+    while ((dataToken = strtok(NULL, " ")) != NULL && count < 64) {
         cpuData[count] = atoll(dataToken);
         count++;
     }
@@ -33,7 +30,8 @@ struct cpuUtilization getCurrentUtilization(FILE* file)
         cpuData[1],
         cpuData[2],
         cpuData[3],
-        cpuData[4]
+        cpuData[4],
+        cpuData[5],
     };
 
     return currentUtilization;
@@ -47,8 +45,7 @@ int main(void) {
         return 1;
     }
 
-    struct cpuUtilization utilization = getCurrentUtilization(file);
-    printf("User:%lld\n", utilization.user);
+    struct cpuUtilization currentUtilization = getCurrentUtilization(file);
 
     fclose(file);
     return 0;
